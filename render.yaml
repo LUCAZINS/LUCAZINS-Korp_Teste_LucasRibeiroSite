@@ -1,14 +1,24 @@
 services:
+  # Frontend Angular
+  - type: web
+    name: microsservicos-frontend
+    env: docker
+    plan: free
+    dockerfilePath: frontend/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: NGINX_HOST
+        value: localhost
+      - key: NGINX_PORT
+        value: "8080"
+
   # Serviço de Estoque
   - type: web
     name: microsservicos-estoque
-    env: dotnet
-    plan: free  # ou standard, se quiser performance melhor
-    buildCommand: |
-      cd Servico.Estoque
-      dotnet publish -c Release -o /var/task
-    startCommand: "cd Servico.Estoque && dotnet Servico.Estoque.dll"
-    healthCheckPath: /swagger/index.html
+    env: docker
+    plan: free
+    dockerfilePath: Servico.Estoque/Dockerfile
+    healthCheckPath: /health
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
@@ -24,13 +34,10 @@ services:
   # Serviço de Faturamento
   - type: web
     name: microsservicos-faturamento
-    env: dotnet
-    plan: free  # ou standard
-    buildCommand: |
-      cd Servico.Faturamento
-      dotnet publish -c Release -o /var/task
-    startCommand: "cd Servico.Faturamento && dotnet Servico.Faturamento.dll"
-    healthCheckPath: /swagger/index.html
+    env: docker
+    plan: free
+    dockerfilePath: Servico.Faturamento/Dockerfile
+    healthCheckPath: /health
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
@@ -47,6 +54,6 @@ services:
   - type: pserv
     name: postgres-korp
     env: postgres
-    plan: free  # free tiver conexões limitadas, considere upgrade
+    plan: free
     ipAllowList: []
     version: 15

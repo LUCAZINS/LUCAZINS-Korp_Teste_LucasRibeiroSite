@@ -28,6 +28,9 @@ COPY --from=publish /app/publish .
 # Expor porta (Render vai injetar PORT automaticamente)
 EXPOSE 8080
 
+# Comando de inicialização
+ENTRYPOINT ["dotnet", "Servico.Faturamento.dll"]
+
 # Definir variáveis de ambiente padrão
 ENV ASPNETCORE_URLS=http://+:8080 \
     ASPNETCORE_ENVIRONMENT=Production
