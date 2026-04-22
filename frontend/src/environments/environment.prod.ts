@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  estoqueApiUrl: 'https://microsservicos-estoque.onrender.com',
-  faturamentoApiUrl: 'https://microsservicos-faturamento.onrender.com'
+  estoqueApiUrl: 'https://estoque-fbnk.onrender.com',
+  faturamentoApiUrl: 'https://faturamento-i4h7.onrender.com'
 };

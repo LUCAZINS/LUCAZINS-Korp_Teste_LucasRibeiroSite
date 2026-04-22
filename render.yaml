@@ -29,7 +29,7 @@ services:
           name: postgres-korp
           property: connectionString
       - key: EstoqueServiceUrl
-        value: https://microsservicos-estoque.onrender.com
+        value: https://estoque-fbnk.onrender.com
 
   # Serviço de Faturamento
   - type: web
@@ -48,7 +48,7 @@ services:
           name: postgres-korp
           property: connectionString
       - key: EstoqueServiceUrl
-        value: https://microsservicos-estoque.onrender.com
+        value: https://estoque-fbnk.onrender.com
 
   # Banco de dados PostgreSQL
   - type: pserv
