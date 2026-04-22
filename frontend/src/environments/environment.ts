@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  estoqueApiUrl: 'http://localhost:5001',
-  faturamentoApiUrl: 'http://localhost:5002'
+  estoqueApiUrl: 'https://estoque-fbnk.onrender.com',
+  faturamentoApiUrl: 'https://faturamento-i4h7.onrender.com'
 };
