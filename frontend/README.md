@@ -36,14 +36,10 @@ frontend/
 └── README.md
 ```
 
-## Instalação (quando Node.js estiver no PATH)
+## Acesso (Somente Site)
 
-```bash
-npm install
-ng serve --open
-```
-
-O frontend estará disponível em `http://localhost:4200`
+- Sistema publicado: `https://korp-teste-frontend.onrender.com`
+- Não é necessário executar `npm install` ou `ng serve` para uso funcional
 
 ## Funcionalidades
 
@@ -70,6 +66,11 @@ O frontend estará disponível em `http://localhost:4200`
 - URL: `http://localhost:5002/api/notasfiscais`
 - Métodos: GET, POST, POST (imprimir)
 
+### Produção (Render)
+- Sistema: `https://korp-teste-frontend.onrender.com`
+- Estoque: `https://estoque-fbnk.onrender.com/api/produtos`
+- Faturamento: `https://faturamento-i4h7.onrender.com/api/notasfiscais`
+
 ## Tratamento de Erros
 
 - Mensagens de erro claras para o usuário
@@ -79,17 +80,17 @@ O frontend estará disponível em `http://localhost:4200`
 ## Ciclos de Vida Angular Utilizados
 
 - **ngOnInit**: Carregamento de dados ao inicializar componentes
-- **ngOnDestroy**: Limpeza de subscriptions (recomendado adicionar)
+- **ngOnDestroy**: não implementado no estado atual
 
 ## RxJS Utilizados
 
 - **Observable**: Para chamadas HTTP
 - **subscription**: Para observar respostas
-- **operators**: map, catchError (recomendado estruturar melhor com pipes)
+- **operators**: não há uso explícito de `map`/`catchError` no estado atual
 
 ## Próximos Passos
 
-1. Instalar Node.js e npm
-2. Rodar `npm install` na pasta frontend
-3. Rodar `ng serve` para iniciar o servidor de desenvolvimento
-4. Acessar `http://localhost:4200` no navegador
+1. Acessar `https://korp-teste-frontend.onrender.com`
+2. Validar o módulo de produtos (`/produtos`)
+3. Validar o módulo de notas fiscais (`/notas-fiscais`)
+4. Confirmar ausência de erros de comunicação no navegador

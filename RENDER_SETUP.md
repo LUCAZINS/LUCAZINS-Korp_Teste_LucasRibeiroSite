@@ -3,255 +3,202 @@
 ## ✅ Pré-requisitos
 
 - [ ] Conta no GitHub
-- [ ] Repositório Git com o código
+- [ ] Repositório Git com o código atualizado
 - [ ] Conta no [Render.com](https://render.com)
-- [ ] Arquivos criados: `Dockerfile`, `.dockerignore`, `render.yaml`
+- [ ] Arquivos no repositório: `render.yaml`, `frontend/Dockerfile`, `Servico.Estoque/Dockerfile`, `Servico.Faturamento/Dockerfile`
 
 ---
 
 ## 📋 Passo 1: Preparar o Repositório Git
 
-### 1.1 Adicionar os arquivos Docker ao Git
+### 1.1 Commit e push das mudanças
 
 ```bash
-cd c:\Users\User\Desktop\KORP\microsservicos
-git add Dockerfile Servico.Faturamento/Dockerfile .dockerignore .env.example render.yaml DOCKER_EXPLICADO.md
-git commit -m "feat: Add Docker and Render configuration"
+git add .
+git commit -m "chore: atualizar configuracao de deploy render"
 git push
 ```
 
 ### 1.2 Verificar no GitHub
 
-Acesse seu repositório no GitHub e confirme que os arquivos estão lá.
+Confirme que os arquivos de deploy estão na branch que o Render usa (normalmente `main`).
 
 ---
 
-## 🔐 Passo 2: Configurar Variáveis de Ambiente
+## 🌐 Passo 2: Criar o Banco no Render
 
-### 2.1 Atualizar appsettings.json
+### 2.1 Criar PostgreSQL
 
-Seu `appsettings.json` **já tem a senha do banco!** ⚠️ Isso é perigoso em produção.
+1. Dashboard Render → **+ New** → **PostgreSQL**
+2. Nome sugerido: `postgres-korp`
+3. Plano: Free (teste) ou pago (produção)
 
-**Solução:** Fazer ele ler de variáveis de ambiente:
+### 2.2 Guardar a connection string
 
-#### Opção A: Usando Configuration (recomendado)
-
-Seu `Program.cs` já faz isso:
-
-```csharp
-builder.Configuration.GetConnectionString("ConexaoPadrao")
-```
-
-Isso funciona com variáveis de ambiente automaticamente! 
-
-**Como funciona:**
-- Em desenvolvimento: lê de `appsettings.json`
-- Em produção (Render): lê de `ConnectionStrings__ConexaoPadrao` (variável de ambiente)
+Depois da criação, copie a connection string para uso nas variáveis dos serviços.
 
 ---
 
-## 🌐 Passo 3: Criar Banco de Dados no Render
+## 🐳 Passo 3: Criar os Web Services
 
-### 3.1 Acessar Render Dashboard
+Crie 3 serviços Web (todos com **Environment: Docker**):
 
-1. Vá em [dashboard.render.com](https://dashboard.render.com)
-2. Clique em **"+ New"** → **"PostgreSQL"**
+1. `microsservicos-estoque`
+2. `microsservicos-faturamento`
+3. `microsservicos-frontend`
 
-### 3.2 Configurar PostgreSQL
+### 3.1 Configurações recomendadas
 
-| Campo | Valor |
-|-------|-------|
-| **Name** | `postgres-korp` |
-| **Database** | `railway` |
-| **User** | `postgres` |
-| **Region** | `São Paulo` ou mais próximo |
-| **Plan** | Free (para teste) ou Standard |
-
-### 3.3 Copiar Connection String
-
-Depois de criado, você receberá algo como:
-
-```
-postgresql://postgres:senha@server.render.com:5432/railway
-```
-
-**⚠️ Guarde isso! Você precisará depois.**
+| Serviço | Root Directory | Dockerfile Path | Docker Build Context |
+|--------|-----------------|-----------------|----------------------|
+| Estoque | *(vazio)* | `Servico.Estoque/Dockerfile` | *(padrão do repositório)* |
+| Faturamento | *(vazio)* | `Servico.Faturamento/Dockerfile` | *(padrão do repositório)* |
+| Frontend | `frontend` | `frontend/Dockerfile` | `frontend` |
 
 ---
 
-## 🐳 Passo 4: Deploy do Serviço de Estoque
+## 🔐 Passo 4: Variáveis de Ambiente
 
-### 4.1 Criar Web Service
+### 4.1 Serviço Estoque (`microsservicos-estoque`)
 
-1. No Render Dashboard: **"+ New"** → **"Web Service"**
-2. Selecione **"Deploy an existing repository"**
-3. Conecte seu GitHub
+Defina:
 
-### 4.2 Configurações Básicas
-
-| Campo | Valor |
-|-------|-------|
-| **Name** | `microsservicos-estoque` |
-| **Repository** | Seu repositório |
-| **Branch** | `main` |
-| **Root Directory** | `Servico.Estoque` |
-| **Environment** | `Docker` |
-| **Instance Type** | Free (ou upgraded) |
-
-### 4.3 Configurar Variáveis de Ambiente
-
-Na seção **"Environment"**, adicione:
-
-```
+```env
 ASPNETCORE_ENVIRONMENT=Production
-ASPNETCORE_URLS=http://+:10000
-ConnectionStrings__ConexaoPadrao=postgresql://postgres:SENHA@SERVER:5432/railway
+ASPNETCORE_URLS=http://+:8080
+ConnectionStrings__ConexaoPadrao=<connection-string-do-postgres-render>
 ```
 
-⚠️ **Substitua:**
-- `SENHA` pela senha do PostgreSQL
-- `SERVER` pelo host do PostgreSQL
+### 4.2 Serviço Faturamento (`microsservicos-faturamento`)
 
-### 4.4 Deploy
+Defina:
 
-Clique em **"Deploy Web Service"**
-
-⏳ Aguarde ~5 minutos. Render vai:
-1. Ler seu Dockerfile
-2. Compilar o código
-3. Iniciar o container
-4. Expor em `https://microsservicos-estoque.onrender.com`
-
-### 4.5 Verificar Deploy
-
-```bash
-# Teste a API
-curl https://microsservicos-estoque.onrender.com/swagger/index.html
+```env
+ASPNETCORE_ENVIRONMENT=Production
+ASPNETCORE_URLS=http://+:8080
+ConnectionStrings__ConexaoPadrao=<connection-string-do-postgres-render>
+EstoqueServiceUrl=https://estoque-fbnk.onrender.com
 ```
 
-Se abrir o Swagger, funcionou! ✅
+### 4.3 Serviço Frontend (`microsservicos-frontend`)
+
+As variáveis NGINX não são obrigatórias para o fluxo atual, mas podem permanecer:
+
+```env
+NGINX_HOST=localhost
+NGINX_PORT=8080
+```
 
 ---
 
-## 🐳 Passo 5: Deploy do Serviço de Faturamento
+## 🧱 Passo 5: Build e Deploy
 
-Repita os passos 4.1 a 4.5, mas com:
+### 5.1 Ordem de deploy recomendada
 
-| Campo | Valor |
-|-------|-------|
-| **Name** | `microsservicos-faturamento` |
-| **Root Directory** | `Servico.Faturamento` |
+1. Deploy de `microsservicos-estoque`
+2. Deploy de `microsservicos-faturamento`
+3. Deploy de `microsservicos-frontend`
 
-**Diferença importante:** Na variável de ambiente, adicione:
+### 5.2 Dica importante
 
-```
-EstoqueServiceUrl=https://microsservicos-estoque.onrender.com
-```
-
-Assim Faturamento consegue chamar Estoque! 📞
+Se houver erro de build antigo, rode **Manual Deploy** com **Clear build cache**.
 
 ---
 
 ## 🗄️ Passo 6: Migrations no Banco
 
-Se não tiver criado as tabelas ainda:
+Se as tabelas ainda não existirem, execute migrations manualmente com a connection string do Render.
 
-### Opção A: Migrations automáticas (no Program.cs)
-
-Adicione no seu `Program.cs` (antes de `app.Run()`):
-
-```csharp
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<EstoqueContext>();
-    db.Database.Migrate();
-}
-```
-
-Assim, quando o container inicia, cria as tabelas automaticamente.
-
-### Opção B: Executar migrations manualmente
-
-No seu PC:
+Exemplo:
 
 ```bash
 cd Servico.Estoque
-dotnet ef database update --connection "postgresql://postgres:SENHA@SERVER:5432/railway"
+dotnet ef database update --connection "<connection-string-do-postgres-render>"
+
+cd ../Servico.Faturamento
+dotnet ef database update --connection "<connection-string-do-postgres-render>"
 ```
 
 ---
 
-## ✅ Verificação Final
+## ✅ Passo 7: Verificação Final
 
-Teste seus serviços:
+Teste no navegador ou via `curl`:
 
 ```bash
-# Estoque
-curl https://microsservicos-estoque.onrender.com/api/produtos
+# Saúde dos serviços
+curl https://estoque-fbnk.onrender.com/health
+curl https://faturamento-i4h7.onrender.com/health
 
-# Faturamento (chama Estoque)
-curl https://microsservicos-faturamento.onrender.com/api/notas-fiscais
+# Endpoints principais
+curl https://estoque-fbnk.onrender.com/api/produtos
+curl https://faturamento-i4h7.onrender.com/api/notasfiscais
 ```
 
-Se funcionar, parabéns! 🎉
+No frontend, valide:
+
+- `https://korp-teste-frontend.onrender.com`
+- `/produtos`
+- `/notas-fiscais`
+
+Sem erros de `0 Unknown Error` nas requisições HTTP.
 
 ---
 
 ## 🚨 Troubleshooting
 
-### Problema: "Build falhou"
+### Problema: `ng: Permission denied` no build do frontend
 
-**Solução:** Verifique os logs no Render:
-1. Dashboard → Seu serviço → **"Logs"**
-2. Procure por erros de compilação
+Verifique se `frontend/.dockerignore` contém `node_modules` para não copiar dependências do host para a imagem.
 
-### Problema: "Cannot connect to database"
+### Problema: `npm run build` retorna `127`
 
-**Solução:** Verifique `ConnectionStrings__ConexaoPadrao`:
-1. Copie exatamente da conection string do PostgreSQL
-2. Substitua o host por `localhost` se tiver em mente... não, use o host real!
+Confirme no `frontend/Dockerfile` uso de:
 
-### Problema: "Service A não consegue chamar Service B"
-
-**Solução:** Use URLs completas com `https://`:
-
-```csharp
-// Errado (localhost não existe no container)
-var url = "http://localhost:5001/api/...";
-
-// Correto
-var url = "https://microsservicos-estoque.onrender.com/api/...";
+```dockerfile
+RUN npm ci --include=dev
+RUN npm run build
 ```
+
+### Problema: Frontend com `status 0 Unknown Error`
+
+1. Confirme URLs de produção no `frontend/src/environments/environment.prod.ts`
+2. Confirme CORS habilitado nos serviços
+3. Confirme que os serviços backend estão `Live` no Render
+
+### Problema: Faturamento não acessa Estoque
+
+Verifique a variável `EstoqueServiceUrl` no serviço de faturamento apontando para a URL pública correta do estoque.
 
 ---
 
 ## 📊 Monitoramento
 
-No Render Dashboard, você pode ver:
+No Render Dashboard, use:
 
-- **Logs** - saída da aplicação
-- **Metrics** - CPU, memória, requisições
-- **Events** - quando redeployou, etc
+- **Logs** para erro de runtime/build
+- **Events** para histórico de deploy
+- **Metrics** para consumo de CPU/memória
 
 ---
 
 ## 💡 Dicas Importantes
 
-1. **Free tier:** Containers "adormecem" se inativos por 15 minutos
-2. **CORS:** Seu frontend precisa ser servido via HTTPS também
-3. **Banco de dados:** Guarde a connection string em um lugar seguro!
-4. **Auto-deploy:** Sempre que fizer `git push`, Render faz deploy automaticamente
+1. Free tier pode entrar em sleep por inatividade
+2. Sempre use `https://` entre serviços públicos do Render
+3. Após alterar URL de API no frontend, é obrigatório novo deploy do frontend
+4. Mantenha secrets somente em variáveis de ambiente do Render
 
 ---
 
 ## Próximas Otimizações (depois)
 
-- [ ] Adicionar CI/CD pipeline
-- [ ] Implementar health checks
-- [ ] Usar Secret Manager em vez de variáveis de ambiente
-- [ ] Cache Docker para builds mais rápidos
-- [ ] Upgrade de plano se não suportar carga
+- [ ] Adicionar CI/CD (pipeline de build + deploy)
+- [ ] Adicionar testes automatizados
+- [ ] Publicar documentação Swagger também em produção
+- [ ] Definir domínio customizado
+- [ ] Adicionar observabilidade (logs estruturados e tracing)
 
 ---
 
-**Dúvidas?** Leia [DOCKER_EXPLICADO.md](./DOCKER_EXPLICADO.md) para entender melhor como tudo funciona!
+**Dúvidas?** Consulte também o [README.md](./README.md) para visão geral da arquitetura.

@@ -5,7 +5,7 @@ Sistema completo com microsserviços em C# e frontend em Angular.
 ## Estrutura de Pastas
 
 ```
-microsservicos/
+Korp_Teste_LucasRibeiro/
 ├── Servico.Estoque/      # Microsserviço de Estoque (.NET 10)
 │   ├── Models/
 │   ├── Controllers/
@@ -23,41 +23,27 @@ microsservicos/
 └── Microsservicos.slnx   # Solução Visual Studio
 ```
 
-## Como Executar
+## Como Acessar (Somente Site)
 
-### 1. Backend - Serviço de Estoque
+### 1. Abrir o sistema em produção
 
-```bash
-cd c:\Users\User\Desktop\DOTNET\microsservicos\Servico.Estoque
-dotnet run
-```
+Acesse: `https://korp-teste-frontend.onrender.com`
 
-O serviço rodará em `http://localhost:5001`
+### 2. Navegar pelos módulos
 
-### 2. Backend - Serviço de Faturamento
+- **Dashboard**: visão geral
+- **Produtos**: cadastro, edição e exclusão
+- **Notas Fiscais**: criação e impressão
+- **Auditoria**: histórico de operações
 
-Em outro terminal:
-```bash
-cd c:\Users\User\Desktop\DOTNET\microsservicos\Servico.Faturamento
-dotnet run
-```
+### 3. Validar backend publicado (opcional)
 
-O serviço rodará em `http://localhost:5002`
-
-### 3. Frontend - Angular
-
-Em outro terminal (required Node.js instalado):
-```bash
-cd c:\Users\User\Desktop\DOTNET\microsservicos\frontend
-npm install
-ng serve --open
-```
-
-O frontend estará disponível em `http://localhost:4200`
+- Estoque: `https://estoque-fbnk.onrender.com/health`
+- Faturamento: `https://faturamento-i4h7.onrender.com/health`
 
 ## Endpoints Disponíveis
 
-### Serviço de Estoque (5001)
+### Serviço de Estoque (Produção)
 
 **Produtos:**
 - `GET /api/produtos` - Listar todos
@@ -67,7 +53,7 @@ O frontend estará disponível em `http://localhost:4200`
 - `DELETE /api/produtos/{id}` - Deletar
 - `POST /api/produtos/{id}/baixar-saldo` - Baixar saldo (usado na impressão)
 
-### Serviço de Faturamento (5002)
+### Serviço de Faturamento (Produção)
 
 **Notas Fiscais:**
 - `GET /api/notasfiscais` - Listar todas
@@ -98,11 +84,10 @@ O frontend estará disponível em `http://localhost:4200`
 
 ## Banco de Dados
 
-**PostgreSQL via Railway**
-- Host: roundhouse.proxy.rlwy.net
-- Port: 59488
-- Database: railway
-- User: postgres
+**PostgreSQL via Render**
+- Serviço: postgres-korp
+- Tipo: PostgreSQL (Render)
+- Credenciais: definidas por variáveis de ambiente (`ConnectionStrings__ConexaoPadrao`)
 
 Tabelas:
 - produtos (Estoque)
@@ -143,7 +128,7 @@ Tabelas:
                   ▼
           ┌──────────────────┐
           │   PostgreSQL     │
-          │   Railway        │
+          │   Render         │
           └──────────────────┘
 ```
 
@@ -161,6 +146,17 @@ Tabelas:
 - RxJS
 - FormsModule
 
+## Deploy em Produção (Render)
+
+- Frontend: Web Service Docker (Nginx), com build Angular via `npm run build`
+- Backend: dois Web Services Docker (`microsservicos-estoque` e `microsservicos-faturamento`)
+- Banco: PostgreSQL gerenciado no Render (`postgres-korp`)
+- Link de acesso ao sistema: `https://korp-teste-frontend.onrender.com`
+- URLs de produção usadas no frontend:
+   - Estoque: `https://estoque-fbnk.onrender.com`
+   - Faturamento: `https://faturamento-i4h7.onrender.com`
+- O backend usa `ForwardedHeaders` para operar corretamente atrás do proxy do Render
+
 ## Próximos Passos (Recomendados)
 
 1. Adicionar autenticação (JWT)
@@ -168,13 +164,12 @@ Tabelas:
 3. Adicionar health checks entre serviços
 4. Implementar circuit breaker (Polly)
 5. Adicionar unit tests
-6. Documentar API OpenAPI/Swagger
-7. Containerizar com Docker
-8. Gerar relatórios de nota fiscal em PDF
+6. Expandir documentação OpenAPI/Swagger
+7. Gerar relatórios de nota fiscal em PDF
 
 ## Notas Importantes
 
-- Certifique-se de que as portas 5001, 5002 e 4200 estão livres
-- O banco de dados PostgreSQL está online e acessível
+- O sistema deve ser acessado pelo link de produção
+- O banco de dados PostgreSQL no Render deve estar online e acessível
 - CORS está configurado para aceitar requisições do frontend
 - As migrations já foram executadas no banco
