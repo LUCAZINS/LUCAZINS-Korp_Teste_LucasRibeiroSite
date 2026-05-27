@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Servico.Faturamento.Migrations
 {
     /// <inheritdoc />
-    public partial class InicialFaturamento : Migration
+    public partial class AtualizacaoBaseDados : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,8 @@ namespace Servico.Faturamento.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     NumeroSequencial = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DataCriacao = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IdempotencyKey = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

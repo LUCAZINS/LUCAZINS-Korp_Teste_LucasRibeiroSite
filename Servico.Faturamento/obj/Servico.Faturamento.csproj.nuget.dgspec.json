@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Desktop\\KORP\\microsservicos - Copia\\Servico.Faturamento\\Servico.Faturamento.csproj": {}
+    "C:\\Users\\Lucas Ribeiro\\Desktop\\DADOS ANTERIORES\\KORP\\site\\LUCAZINS-Korp_Teste_LucasRibeiroSite\\Servico.Faturamento\\Servico.Faturamento.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Desktop\\KORP\\microsservicos - Copia\\Servico.Faturamento\\Servico.Faturamento.csproj": {
+    "C:\\Users\\Lucas Ribeiro\\Desktop\\DADOS ANTERIORES\\KORP\\site\\LUCAZINS-Korp_Teste_LucasRibeiroSite\\Servico.Faturamento\\Servico.Faturamento.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Desktop\\KORP\\microsservicos - Copia\\Servico.Faturamento\\Servico.Faturamento.csproj",
+        "projectUniqueName": "C:\\Users\\Lucas Ribeiro\\Desktop\\DADOS ANTERIORES\\KORP\\site\\LUCAZINS-Korp_Teste_LucasRibeiroSite\\Servico.Faturamento\\Servico.Faturamento.csproj",
         "projectName": "Servico.Faturamento",
-        "projectPath": "C:\\Users\\User\\Desktop\\KORP\\microsservicos - Copia\\Servico.Faturamento\\Servico.Faturamento.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Desktop\\KORP\\microsservicos - Copia\\Servico.Faturamento\\obj\\",
+        "projectPath": "C:\\Users\\Lucas Ribeiro\\Desktop\\DADOS ANTERIORES\\KORP\\site\\LUCAZINS-Korp_Teste_LucasRibeiroSite\\Servico.Faturamento\\Servico.Faturamento.csproj",
+        "packagesPath": "C:\\Users\\Lucas Ribeiro\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Lucas Ribeiro\\Desktop\\DADOS ANTERIORES\\KORP\\site\\LUCAZINS-Korp_Teste_LucasRibeiroSite\\Servico.Faturamento\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Lucas Ribeiro\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -82,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

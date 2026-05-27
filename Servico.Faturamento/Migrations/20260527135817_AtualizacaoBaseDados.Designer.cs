@@ -12,8 +12,8 @@ using Servico.Faturamento.Context;
 namespace Servico.Faturamento.Migrations
 {
     [DbContext(typeof(FaturamentoContext))]
-    [Migration("20260419174024_InicialFaturamento")]
-    partial class InicialFaturamento
+    [Migration("20260527135817_AtualizacaoBaseDados")]
+    partial class AtualizacaoBaseDados
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,10 @@ namespace Servico.Faturamento.Migrations
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("NumeroSequencial")
                         .HasColumnType("integer");
